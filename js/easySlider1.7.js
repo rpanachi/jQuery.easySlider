@@ -33,6 +33,7 @@
 	  
 		// default configuration properties
 		var defaults = {			
+			previousNext:		true,
 			prevId: 		'prevBtn',
 			prevText: 		'Previous',
 			nextId: 		'nextBtn',	
@@ -53,7 +54,7 @@
 			pause:			2000,
 			continuous:		false, 
 			numeric: 		false,
-			numericId: 		'controls'
+			numericClass: 		'controls'
 		}; 
 		
 		var options = $.extend(defaults, options);  
@@ -81,11 +82,14 @@
 								
 			if(options.controlsShow){
 				var html = options.controlsBefore;				
-				if(options.numeric){
-					html += '<ol id="'+ options.numericId +'"></ol>';
-				} else {
+				if (options.previousNext) {
 					if(options.firstShow) html += '<span id="'+ options.firstId +'"><a href=\"javascript:void(0);\">'+ options.firstText +'</a></span>';
 					html += ' <span id="'+ options.prevId +'"><a href=\"javascript:void(0);\">'+ options.prevText +'</a></span>';
+				}
+				if(options.numeric){
+					html += '<ol class="'+ options.numericClass +'"></ol>';
+				} 
+				if (options.previousNext) {
 					html += ' <span id="'+ options.nextId +'"><a href=\"javascript:void(0);\">'+ options.nextText +'</a></span>';
 					if(options.lastShow) html += ' <span id="'+ options.lastId +'"><a href=\"javascript:void(0);\">'+ options.lastText +'</a></span>';				
 				};
@@ -97,14 +101,15 @@
 			if(options.numeric){									
 				for(var i=0;i<s;i++){						
 					$(document.createElement("li"))
-						.attr('id',options.numericId + (i+1))
-						.html('<a rel='+ i +' href=\"javascript:void(0);\">'+ (i+1) +'</a>')
-						.appendTo($("#"+ options.numericId))
+						.attr('class',options.numericClass + (i+1))
+						.html('<a title="Go to item '+(i+1)+'" rel='+ i +' href=\"javascript:void(0);\">'+ (i+1) +'</a>')
+						.appendTo($("."+ options.numericClass))
 						.click(function(){							
 							animate($("a",$(this)).attr('rel'),true);
 						}); 												
 				};							
-			} else {
+			} 
+			if (options.previousNext){
 				$("a","#"+options.nextId).click(function(){		
 					animate("next",true);
 				});
@@ -121,8 +126,8 @@
 			
 			function setCurrent(i){
 				i = parseInt(i)+1;
-				$("li", "#" + options.numericId).removeClass("current");
-				$("li#" + options.numericId + i).addClass("current");
+				$("li", "." + options.numericClass).removeClass("current");
+				$("li." + options.numericClass + i).addClass("current");
 			};
 			
 			function adjust(){
@@ -155,7 +160,7 @@
 							t = ts;
 							break; 
 						default:
-							t = dir;
+							t = parseInt(dir);
 							break; 
 					};	
 					var diff = Math.abs(ot-t);

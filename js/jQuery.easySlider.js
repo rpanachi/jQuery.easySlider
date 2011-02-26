@@ -54,7 +54,8 @@
 			pause:			2000,
 			continuous:		false, 
 			numeric: 		false,
-			numericClass: 		'controls'
+			numericClass: 		'controls',
+                        numericFormat:          []
 		}; 
 		
 		var options = $.extend(defaults, options);  
@@ -100,9 +101,10 @@
 			
 			if(options.numeric){									
 				for(var i=0;i<s;i++){						
+                                        numericText = options.numericFormat[i] || (i+1);
 					$(document.createElement("li"))
 						.attr('class',options.numericClass + (i+1))
-						.html('<a title="Go to item '+(i+1)+'" rel='+ i +' href=\"javascript:void(0);\">'+ (i+1) +'</a>')
+						.html('<a title="Go to item '+(i+1)+'" rel='+ i +' href=\"javascript:void(0);\">'+ numericText +'</a>')
 						.appendTo($("."+ options.numericClass))
 						.click(function(){							
 							animate($("a",$(this)).attr('rel'),true);
